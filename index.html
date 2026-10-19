@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>偷天大盜 PHANTOM HEIST | 線上對戰原型 v2.0</title>
+  <title>偷天大盜 PHANTOM HEIST | v2.1 線上對戰原型</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
@@ -22,11 +22,6 @@
         radial-gradient(circle at 85% 80%, rgba(33, 0, 20, 0.9) 0%, transparent 50%),
         repeating-linear-gradient(135deg, #000000 0px, #000000 18px, #12000b 18px, #12000b 36px);
       overflow-x: hidden;
-    }
-    .p5-title {
-      font-family: 'Anton', 'Noto Sans TC', sans-serif;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
     }
     .p5-box {
       background: var(--p5-dark);
@@ -72,11 +67,6 @@
       background: var(--p5-pink);
       color: var(--p5-black);
     }
-    .p5-tag {
-      display: inline-block;
-      transform: skewX(-10deg);
-      border: 2px solid var(--p5-white);
-    }
     .cell-btn {
       transition: all 0.12s ease;
       position: relative;
@@ -110,20 +100,21 @@
         <div>
           <h1 class="text-lg md:text-xl font-black tracking-wider flex items-center gap-2">
             偷天大盜
-            <span class="text-xs bg-[#210014] text-[#ff48a0] border border-[#ff48a0] px-2 py-0.5">v2.0 線上對戰原型</span>
+            <span class="text-xs bg-amber-300 text-black font-black border-2 border-white px-2 py-0.5">v2.1 多人鎖定版</span>
           </h1>
         </div>
       </div>
 
-      <!-- 視角切換與連線狀態 -->
+      <!-- 單人測試專用視角切換器 (多人連線時自動隱藏) & 連線狀態 -->
       <div class="flex flex-wrap items-center gap-2">
         <div id="viewSwitcherBar" class="hidden items-center gap-1 bg-[#210014] border-2 border-[#ff48a0] px-2 py-1 text-xs">
-          <span class="text-[#ff48a0] font-bold mr-1">👁️ 測試視角:</span>
-          <button onclick="window.setPerspective('AUTO')" id="viewBtn_AUTO" class="px-2 py-0.5 font-bold border border-white bg-[#ff48a0] text-black">自動跟隨</button>
+          <span class="text-[#ff48a0] font-bold mr-1">👁️ 單人測試視角:</span>
+          <button onclick="window.setPerspective('MY_ROLE')" id="viewBtn_MY_ROLE" class="px-2 py-0.5 font-bold border border-white bg-[#ff48a0] text-black">僅看自己</button>
+          <button onclick="window.setPerspective('AUTO')" id="viewBtn_AUTO" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">跟隨行動者</button>
           <button onclick="window.setPerspective('curator')" id="viewBtn_curator" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">館長</button>
-          <button onclick="window.setPerspective('thief1')" id="viewBtn_thief1" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">怪盜1</button>
-          <button onclick="window.setPerspective('thief2')" id="viewBtn_thief2" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">怪盜2</button>
-          <button onclick="window.setPerspective('thief3')" id="viewBtn_thief3" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">怪盜3</button>
+          <button onclick="window.setPerspective('thief1')" id="viewBtn_thief1" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">怪盜A</button>
+          <button onclick="window.setPerspective('thief2')" id="viewBtn_thief2" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">怪盜B</button>
+          <button onclick="window.setPerspective('thief3')" id="viewBtn_thief3" class="px-2 py-0.5 font-bold border border-white/40 hover:border-white">怪盜C</button>
         </div>
 
         <div id="connBadge" class="text-xs font-bold px-3 py-1 border-2 border-white bg-[#210014]">
@@ -147,7 +138,7 @@
         </div>
         <h2 class="text-3xl md:text-4xl font-black mb-2">1 館長 VS 3 怪盜 戰爭迷霧心理戰</h2>
         <p class="text-sm text-white/80 leading-relaxed mb-6">
-          7×10 博物館棋盤對決！怪盜每回合潛入盜取館藏（<span class="text-[#ff48a0] font-bold">得手後立即撤離、本回合免疫捉賊</span>），館長則透過展出賺分或捉賊封鎖行動。支援真人連線、邀請連結一鍵入房與智慧 AI 人機補位測試！
+          7×10 博物館棋盤對決！怪盜每回合潛入盜取館藏（<span class="text-[#ff48a0] font-bold">得手後立即撤離、本回合免疫捉賊</span>），館長則透過展出賺分或捉賊封鎖行動。內建開局抽卡階段、技能開關與 AI 人機補位！
         </p>
 
         <!-- 玩家暱稱 -->
@@ -164,7 +155,7 @@
               <div class="text-xs font-black text-[#ff48a0] mb-1">HOST NEW GAME</div>
               <h3 class="text-xl font-black mb-2">創建私人房間 (擔任房主)</h3>
               <p class="text-xs text-white/70 mb-4">
-                建立專屬 6 碼房間並取得邀請連結，可自由設定各項 <code class="text-[#ff48a0]">n</code> 數值、切換「純基礎規則 / 技能卡模式」，並隨時加入 AI 人機。
+                建立專屬 6 碼房間並取得邀請連結，可自由設定各項 <code class="text-[#ff48a0]">n</code> 數值、切換「純基礎規則 / 技能卡模式」，並隨時指派 AI 人機補位。
               </p>
             </div>
             <button onclick="window.handleCreateRoom()" class="p5-btn w-full py-3 text-base">
@@ -198,10 +189,10 @@
         <div class="flex flex-wrap items-center gap-4">
           <div>
             <div class="text-xs text-[#ff48a0] font-bold">PRIVATE ROOM CODE / 私人房號</div>
-            <div class="flex items-center gap-2 mt-0.5">
+            <div class="flex flex-wrap items-center gap-2 mt-0.5">
               <span id="lobbyRoomCode" class="text-3xl font-black tracking-widest bg-black px-3 py-1 border-2 border-white text-[#ff48a0]">------</span>
               <button onclick="window.copyRoomCode()" class="p5-btn-dark px-3 py-1.5 text-xs">📋 複製房號</button>
-              <button onclick="window.copyInviteLink()" class="p5-btn px-3 py-1.5 text-xs">🔗 複製邀請連結 (推薦)</button>
+              <button onclick="window.copyInviteLink()" class="p5-btn px-3 py-1.5 text-xs">🔗 複製房間邀請連結</button>
             </div>
           </div>
           <div class="text-xs text-white/80 bg-black/70 border border-white/30 px-3 py-2">
@@ -211,7 +202,7 @@
         </div>
 
         <div class="flex items-center gap-2">
-          <button id="btnFillAI" onclick="window.fillEmptyWithAI()" class="hidden p5-btn-dark px-3 py-2 text-xs">
+          <button id="btnFillAI" onclick="window.fillEmptyWithAI()" class="hidden p5-btn px-3 py-2 text-xs">
             🤖 一鍵用 AI 補滿空位
           </button>
           <button onclick="window.leaveRoom()" class="bg-black border-2 border-white/60 hover:border-white px-3 py-2 text-xs font-bold">
@@ -226,7 +217,7 @@
           <div>
             <div class="flex items-center justify-between border-b-2 border-[#ff48a0] pb-2 mb-4">
               <h3 class="text-lg font-black">STEP 1：選擇陣營座位 (1 館長 + 3 怪盜)</h3>
-              <span class="text-xs text-[#ff48a0] font-bold">支援 AI 人機</span>
+              <span class="text-xs bg-[#ff48a0] text-black px-2 py-0.5 font-black">支援 AI 人機</span>
             </div>
 
             <div id="seatListContainer" class="space-y-3"></div>
@@ -253,11 +244,11 @@
           </div>
 
           <!-- 功能開關區：技能開關 + 發牌模式 -->
-          <div class="grid sm:grid-cols-2 gap-3 bg-black/80 border-2 border-white p-3.5">
+          <div class="grid sm:grid-cols-2 gap-3 bg-black border-2 border-[#ff48a0] p-3.5">
             <div>
               <label class="block text-xs font-black text-[#ff48a0] mb-1">⚡ 技能卡系統開關 (驗證基礎規則用)</label>
               <select id="cfg_skillsEnabled" onchange="window.updateHostConfig()" class="w-full bg-[#210014] border-2 border-white px-2.5 py-2 text-sm font-bold text-white">
-                <option value="true">🟢 開啟技能卡 (完整規則 + 抽卡階段)</option>
+                <option value="true">🟢 開啟技能卡 (完整規則 + 開局抽卡階段)</option>
                 <option value="false">⚪ 關閉技能卡 (純基礎規則驗證模式)</option>
               </select>
               <p class="text-[11px] text-white/60 mt-1">關閉時不發放任何館長策略與怪盜預告函，直接驗證基礎棋盤與得分。</p>
@@ -266,31 +257,31 @@
             <div id="skillModeBox">
               <label class="block text-xs font-black text-[#ff48a0] mb-1">🃏 技能卡發放方式</label>
               <select id="cfg_skillMode" onchange="window.updateHostConfig()" class="w-full bg-[#210014] border-2 border-white px-2.5 py-2 text-sm font-bold text-white">
-                <option value="random">🎲 開局隨機抽卡 (推薦正式遊玩)</option>
-                <option value="manual">🛠️ 房主指定技能卡 (測試特定技能用)</option>
+                <option value="random">🎲 開局隨機抽卡 (進入互動翻牌階段)</option>
+                <option value="manual">🛠️ 房主指定技能卡 (測試特定技能組合)</option>
               </select>
-              <p class="text-[11px] text-white/60 mt-1">隨機模式下，開局會進入互動式翻牌階段。</p>
+              <p class="text-[11px] text-white/60 mt-1">開局會先進入專屬抽卡畫面，讓玩家翻開卡牌。</p>
             </div>
           </div>
 
           <!-- 手動指定技能選單 (僅在 manual 且開啟技能時顯示) -->
-          <div id="manualSkillBox" class="hidden bg-black/90 border-2 border-[#ff48a0] p-3.5 space-y-2">
-            <div class="text-xs font-black text-[#ff48a0]">🛠️ 房主指定各位置技能卡 (測試特定組合)</div>
+          <div id="manualSkillBox" class="hidden bg-black/90 border-2 border-amber-400 p-3.5 space-y-2">
+            <div class="text-xs font-black text-amber-300">🛠️ 房主指定各位置技能卡 (測試特定組合)</div>
             <div class="grid sm:grid-cols-2 gap-2 text-xs">
               <div>
                 <label class="block text-white/70 mb-0.5">館長策略：</label>
                 <select id="cfg_curatorSkill" onchange="window.updateHostConfig()" class="w-full bg-[#210014] border border-white p-1.5 font-bold"></select>
               </div>
               <div>
-                <label class="block text-white/70 mb-0.5">怪盜 1 預告函：</label>
+                <label class="block text-white/70 mb-0.5">怪盜 A 預告函：</label>
                 <select id="cfg_thief1Skill" onchange="window.updateHostConfig()" class="w-full bg-[#210014] border border-white p-1.5 font-bold"></select>
               </div>
               <div>
-                <label class="block text-white/70 mb-0.5">怪盜 2 預告函：</label>
+                <label class="block text-white/70 mb-0.5">怪盜 B 預告函：</label>
                 <select id="cfg_thief2Skill" onchange="window.updateHostConfig()" class="w-full bg-[#210014] border border-white p-1.5 font-bold"></select>
               </div>
               <div>
-                <label class="block text-white/70 mb-0.5">怪盜 3 預告函：</label>
+                <label class="block text-white/70 mb-0.5">怪盜 C 預告函：</label>
                 <select id="cfg_thief3Skill" onchange="window.updateHostConfig()" class="w-full bg-[#210014] border border-white p-1.5 font-bold"></select>
               </div>
             </div>
@@ -378,14 +369,14 @@
         </div>
         <h2 class="text-2xl md:text-3xl font-black mb-1">🃏 開局技能卡 & 預告函抽取階段</h2>
         <p class="text-xs md:text-sm text-white/80">
-          請點擊你的專屬卡牌進行翻牌！怪盜將依照抽到的預告函號碼（<span class="text-[#ff48a0] font-bold">NO.1 → NO.6</span>）由小到大決定每回合潛入順序！
+          請點擊你自己的卡牌進行翻牌！怪盜將依照抽到的預告函號碼（<span class="text-[#ff48a0] font-bold">NO.1 → NO.6</span>）由小到大決定每回合潛入順序！
         </p>
 
         <!-- 四張牌展示區 -->
         <div id="cardDrawGrid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6 text-left"></div>
 
         <!-- 怪盜行動順序預覽與進入下一階段按鈕 -->
-        <div id="cardDrawFooter" class="bg-black/90 border-2 border-white p-4 flex flex-wrap items-center justify-between gap-4">
+        <div class="bg-black/90 border-2 border-white p-4 flex flex-wrap items-center justify-between gap-4">
           <div id="drawOrderSummary" class="text-sm font-bold text-left"></div>
           <button id="btnFinishDraw" onclick="window.proceedAfterCardDraw()" class="p5-btn px-6 py-3 text-base">
             ⚡ 全員確認完畢，進入博物館佈置階段
@@ -421,7 +412,7 @@
 
         <div class="flex items-center gap-2">
           <div id="hudCurrentViewRole" class="text-xs font-black bg-[#ff48a0] text-black px-3 py-1.5 border-2 border-white transform -skew-x-6">
-            目前視角：-
+            我的陣營：-
           </div>
           <button onclick="window.leaveRoom()" class="bg-black border-2 border-white/50 hover:border-white px-2.5 py-1.5 text-xs font-bold">
             返回首頁
@@ -443,10 +434,10 @@
             </div>
             <!-- 圖例說明 -->
             <div class="flex flex-wrap gap-2 text-[11px]">
-              <span class="bg-[#210014] border border-white/50 px-2 py-0.5">💎 館藏(館長可見)</span>
+              <span class="bg-[#210014] border border-white/50 px-2 py-0.5">💎 館藏(僅館長可見)</span>
               <span class="bg-[#ff48a0] text-black font-bold px-2 py-0.5">💥 已失竊(全體可見)</span>
               <span class="bg-black border border-[#ff48a0] text-[#ff48a0] px-2 py-0.5">🐾 怪盜標記(不可再偷)</span>
-              <span class="bg-purple-950 border border-purple-400 text-purple-200 px-2 py-0.5">🎩 3×3魔術格(怪盜可見)</span>
+              <span class="bg-purple-950 border border-purple-400 text-purple-200 px-2 py-0.5">🎩 3×3魔術格(僅怪盜可見)</span>
             </div>
           </div>
 
@@ -480,7 +471,7 @@
           <div class="p5-box-black p-4 space-y-3">
             <div class="flex items-center justify-between border-b border-white/30 pb-1.5">
               <h4 class="text-sm font-black text-[#ff48a0]">🎭 雙方陣營與技能情報 (依視角隔離)</h4>
-              <span class="text-[11px] text-white/60">怪盜得手當回合自動撤離免疫捉賊</span>
+              <span class="text-[11px] text-emerald-300 font-bold">🏃 得手當回合自動撤離免疫捉賊</span>
             </div>
             <div id="statusCardsContainer" class="space-y-2.5"></div>
           </div>
@@ -510,7 +501,7 @@
     import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // =========================================================================
-    // 1. 已直接內建你的 PH-kurake Firebase 設定 (無需再手動修改)
+    // 1. 內建 PH-kurake Firebase 設定
     // =========================================================================
     const CUSTOM_FIREBASE_CONFIG = {
       apiKey: "AIzaSyCM-INS_zje0q52lyY-32WFIS_EpYHACrY",
@@ -562,17 +553,17 @@
     let unsubscribeRoom = null;
     let roomState = null;
 
-    // 視角控制 ('AUTO' 或 'curator' | 'thief1' | 'thief2' | 'thief3')
-    let perspectiveMode = "AUTO";
+    // 單人測試模式專用視角控制 (預設鎖定 MY_ROLE 只看自己，絕不影響多人對戰)
+    let perspectiveMode = "MY_ROLE";
 
-    // 本地暫存選擇（佈置或當回合選格）
-    let tempSelectedCells = [];       // 陣列: ["5-2", ...] (格式: "floor-colIdx", floor: 1~10, colIdx: 0~6)
-    let tempTrapCells = [];           // 私刑陷阱格: ["3-1", "8-4"]
-    let tempCounterfeitCell = null;   // 贗品格: "4-3"
-    let curatorSetupStep = "ARTIFACTS"; // "ARTIFACTS" | "COUNTERFEIT" | "TRAPS"
-    let curatorActionType = "EXHIBIT";  // "EXHIBIT" | "ARREST"
-    let tempExhibitBaseFloor = 1;       // 1~8 (代表 base, base+1, base+2)
-    let tempArrestCells = [];           // 捉賊選格
+    // 本地暫存選擇
+    let tempSelectedCells = [];
+    let tempTrapCells = [];
+    let tempCounterfeitCell = null;
+    let curatorSetupStep = "ARTIFACTS";
+    let curatorActionType = "EXHIBIT";
+    let tempExhibitBaseFloor = 1;
+    let tempArrestCells = [];
     let aiTimer = null;
 
     // =========================================================================
@@ -643,10 +634,9 @@
           if (user) {
             myUid = user.uid;
             isCloudReady = true;
-            badge.innerHTML = "🟢 雲端連線就緒 (PH-kurake)";
+            badge.innerHTML = "🟢 雲端連線就緒 (v2.1)";
             badge.className = "text-xs font-bold px-3 py-1 border-2 border-white bg-emerald-950 text-emerald-300";
 
-            // 檢查網址是否有 ?room=XXXXXX 邀請碼自動加入
             const params = new URLSearchParams(window.location.search);
             const autoRoom = params.get("room");
             if (autoRoom && !currentRoomCode) {
@@ -674,10 +664,10 @@
     }
 
     // =========================================================================
-    // 5. 房間建立、加入與邀請連結同步 (徹底修復房主覆蓋問題)
+    // 5. 房間建立與加入
     // =========================================================================
     function getRoomDocRef(code) {
-      return doc(db, "phantom_heist_rooms", code.toUpperCase());
+      return doc(db, "phantom_heist_rooms_v2", code.toUpperCase());
     }
 
     function createInitialRoomData(code, hostUid, hostName) {
@@ -685,7 +675,7 @@
         roomCode: code,
         hostId: hostUid,
         hostName: hostName,
-        status: "LOBBY", // LOBBY | CARD_DRAW | MAGIC_SETUP | CURATOR_SETUP | THIEF_TURN | CURATOR_TURN | GAME_OVER
+        status: "LOBBY",
         createdAt: Date.now(),
         config: {
           skillsEnabled: true,
@@ -722,14 +712,13 @@
       const initialData = createInitialRoomData(code, myUid, nickname);
       try {
         await setDoc(getRoomDocRef(code), initialData);
-        // 更新網址參數方便直接複製網址分享
         const newUrl = `${window.location.pathname}?room=${code}`;
         window.history.replaceState({}, "", newUrl);
         subscribeToRoom(code);
-        showToast(`✅ 房間 ${code} 創建成功！可複製邀請連結給朋友`);
+        showToast(`✅ 房間 ${code} 創建成功！`);
       } catch (e) {
         console.error("Create room error:", e);
-        showToast("❌ 創建房間失敗，請確認 Firestore 規則已發布！");
+        showToast("❌ 創建房間失敗，請確認 Firestore 規則已開啟！");
       }
     };
 
@@ -748,7 +737,7 @@
         const ref = getRoomDocRef(rawCode);
         const snap = await getDoc(ref);
         if (!snap.exists()) {
-          showToast(`❌ 找不到房號「${rawCode}」，請確認房主已創建且房號正確！`);
+          showToast(`❌ 找不到房號「${rawCode}」，請請房主在 v2.1 新版重新創建房間！`);
           return;
         }
 
@@ -756,7 +745,6 @@
         const nickname = getMyNickname();
         const seats = { ...data.seats };
 
-        // 檢查自己是否已經在座位上，若無則自動坐進第一個空位
         const alreadySeated = Object.values(seats).some(s => s && s.uid === myUid);
         if (!alreadySeated && data.status === "LOBBY") {
           for (const roleKey of ["curator", "thief1", "thief2", "thief3"]) {
@@ -765,7 +753,6 @@
               break;
             }
           }
-          // 只更新 seats，絕對不改動 hostId！
           await updateDoc(ref, { seats });
         }
 
@@ -775,7 +762,7 @@
         showToast(`🃏 成功加入房間 ${rawCode}！`);
       } catch (e) {
         console.error("Join room error:", e);
-        showToast("❌ 加入房間失敗，請檢查網路或 Firestore 權限設定！");
+        showToast("❌ 加入房間失敗，請檢查網路連線！");
       }
     };
 
@@ -801,6 +788,7 @@
       unsubscribeRoom = null;
       currentRoomCode = null;
       roomState = null;
+      perspectiveMode = "MY_ROLE";
       clearTimeout(aiTimer);
       window.history.replaceState({}, "", window.location.pathname);
       document.getElementById("screenHome").classList.remove("hidden");
@@ -827,7 +815,16 @@
     // 6. 大廳座位選擇、AI 人機指派與房主設定同步
     // =========================================================================
     function isMeHost() {
-      return roomState && roomState.hostId === myUid;
+      return Boolean(roomState && roomState.hostId === myUid);
+    }
+
+    // 判斷是否為「1真人 + 3AI」的單人測試模式
+    function isSinglePlayerTestMode() {
+      if (!roomState || !roomState.seats) return false;
+      const humanCount = ["curator", "thief1", "thief2", "thief3"].filter(
+        k => roomState.seats[k] && roomState.seats[k].uid && !roomState.seats[k].isAI
+      ).length;
+      return humanCount <= 1 && isMeHost();
     }
 
     window.selectSeat = async function (roleKey) {
@@ -835,7 +832,6 @@
       const nickname = getMyNickname();
       const seats = JSON.parse(JSON.stringify(roomState.seats));
 
-      // 先清除自己原本的座位（若不是 AI）
       for (const k of ["curator", "thief1", "thief2", "thief3"]) {
         if (seats[k].uid === myUid) {
           seats[k] = { uid: null, name: null, isAI: false };
@@ -893,7 +889,6 @@
       let t2 = Number(document.getElementById("cfg_thief2Skill").value);
       let t3 = Number(document.getElementById("cfg_thief3Skill").value);
 
-      // 確保手動指定預告函時不重複，避免行動順序衝突
       const used = new Set([t1]);
       if (used.has(t2)) {
         t2 = [1, 2, 3, 4, 5, 6].find(x => !used.has(x));
@@ -965,7 +960,6 @@
           tSkills.thief2 = picked[1];
           tSkills.thief3 = picked[2];
         }
-        // 依照預告函編號由小到大排序怪盜行動順序
         thiefOrder.sort((a, b) => tSkills[a] - tSkills[b]);
       }
 
@@ -974,17 +968,17 @@
         curatorScore: 0,
         curatorSkill: cSkill,
         constructionUsed: false,
-        artifacts: [],         // 真品館藏 ["5-2", ...]
-        counterfeitCell: null, // 贗品位置 "4-1"
-        stolenCells: [],       // 已被偷走的館藏格 (包含真品或贗品)
-        trapCells: [],         // 私刑陷阱格 ["3-1", "8-4"]
-        triggeredTraps: [],    // 已觸發的陷阱格
-        markedCells: [],       // 怪盜留下的標記 (不可再次盜取)
-        lastExhibitFloors: [], // 本回合館長展出的樓層
-        lastArrestCells: [],   // 本回合館長捉賊的格子
+        artifacts: [],
+        counterfeitCell: null,
+        stolenCells: [],
+        trapCells: [],
+        triggeredTraps: [],
+        markedCells: [],
+        lastExhibitFloors: [],
+        lastArrestCells: [],
         thiefOrder: thiefOrder,
         currentThiefIdx: 0,
-        magicZone: null,       // { centerFloor, centerCol, cells: [...], ownerRole: 'thiefX' }
+        magicZone: null,
         cardDrawn: {
           curator: seats.curator.isAI ? true : false,
           thief1: seats.thief1.isAI ? true : false,
@@ -1032,7 +1026,7 @@
         winReason: ""
       };
 
-      // 若開啟技能，先進入 CARD_DRAW 讓玩家直觀翻牌；若關閉技能，直接進入 CURATOR_SETUP
+      perspectiveMode = "MY_ROLE";
       const nextStatus = cfg.skillsEnabled ? "CARD_DRAW" : "CURATOR_SETUP";
       resetLocalSelections();
       await updateDoc(getRoomDocRef(currentRoomCode), {
@@ -1041,21 +1035,24 @@
       });
     };
 
-    // 玩家在抽卡畫面點擊翻開卡牌
     window.flipMyCard = async function (roleKey) {
       if (!roomState || roomState.status !== "CARD_DRAW") return;
+      const seat = roomState.seats[roleKey];
+      // 只能翻開自己的牌，或是單人測試模式下房主代翻
+      if (seat.uid !== myUid && !isSinglePlayerTestMode()) {
+        showToast("⚠️ 只能翻開屬於你自己的卡牌！");
+        return;
+      }
       const g = JSON.parse(JSON.stringify(roomState.game));
       g.cardDrawn[roleKey] = true;
       await updateDoc(getRoomDocRef(currentRoomCode), { game: g });
     };
 
-    // 抽卡完畢進入佈置階段
     window.proceedAfterCardDraw = async function () {
       if (!roomState || roomState.status !== "CARD_DRAW") return;
       const g = JSON.parse(JSON.stringify(roomState.game));
       g.cardDrawn = { curator: true, thief1: true, thief2: true, thief3: true };
 
-      // 檢查是否有怪盜抽到 NO.2 魔術表演
       const magicHolder = ["thief1", "thief2", "thief3"].find(r => g.thieves[r].skill === 2);
       let nextStatus = "CURATOR_SETUP";
       if (magicHolder) {
@@ -1082,15 +1079,19 @@
     }
 
     // =========================================================================
-    // 8. 視角計算與戰爭迷霧隔離
+    // 8. 視角與操作權限鎖定 (解決多人連線怪盜誤觸館長佈置問題)
     // =========================================================================
     window.setPerspective = function (mode) {
+      if (!isSinglePlayerTestMode()) {
+        perspectiveMode = "MY_ROLE";
+        return;
+      }
       perspectiveMode = mode;
       renderAll();
     };
 
     function getMyAssignedRole() {
-      if (!roomState) return null;
+      if (!roomState || !roomState.seats) return null;
       for (const k of ["curator", "thief1", "thief2", "thief3"]) {
         if (roomState.seats[k] && roomState.seats[k].uid === myUid) return k;
       }
@@ -1111,29 +1112,35 @@
       return "curator";
     }
 
+    // 決定當前畫面顯示哪個角色的視野
     function getEffectiveViewRole() {
-      const myRole = getMyAssignedRole();
-      // 若房內有 AI 或房主單人測試，允許使用頂部視角切換器
-      if (perspectiveMode !== "AUTO") return perspectiveMode;
-      if (myRole) {
-        // 如果輪到 AI 行動且我是房主，或者我本身有多角色測試需求
+      const myRole = getMyAssignedRole() || "curator";
+      // 多人連線模式下，嚴格鎖死只能看自己的角色視角！
+      if (!isSinglePlayerTestMode()) {
         return myRole;
       }
-      return getActiveTurnRole();
+      // 單人測試模式 (1真人+3AI) 下，預設看自己，若房主手動切換才改變視角
+      if (perspectiveMode === "MY_ROLE") return myRole;
+      if (perspectiveMode === "AUTO") return getActiveTurnRole();
+      return perspectiveMode;
     }
 
+    // 決定當前玩家是否能操作 roleKey
     function canControlRole(roleKey) {
-      if (!roomState) return false;
+      if (!roomState || !roomState.seats) return false;
       const seat = roomState.seats[roleKey];
-      if (!seat) return false;
-      if (seat.uid === myUid) return true;
-      // 房主在切換測試視角時也可手動代操
-      if (isMeHost() && perspectiveMode === roleKey) return true;
-      return false;
+      if (!seat || !seat.uid) return false;
+
+      // 若該位置是真人玩家，永遠只有該名真人本人 (seat.uid === myUid) 可以操作！
+      if (!seat.isAI) {
+        return seat.uid === myUid;
+      }
+      // 若該位置是 AI，且處於單人測試模式，允許房主手動切換視角時介入測試
+      return isSinglePlayerTestMode() && (perspectiveMode === roleKey || perspectiveMode === "AUTO");
     }
 
     // =========================================================================
-    // 9. 遊戲各階段互動邏輯 (魔術格、館長佈置、怪盜盜取、館長展出/捉賊)
+    // 9. 遊戲各階段互動邏輯
     // =========================================================================
     function get3x3Cells(centerFloor, centerCol) {
       const fMin = Math.max(2, Math.min(9, centerFloor));
@@ -1157,7 +1164,7 @@
       if (st === "MAGIC_SETUP") {
         const magicRole = getActiveTurnRole();
         if (!canControlRole(magicRole)) {
-          showToast("⚠️ 目前由持有「魔術表演」的怪盜秘密佈置 3×3 魔術格！");
+          showToast("⚠️ 目前由持有「魔術表演」的怪盜秘密佈置 3×3 魔術格，其他玩家無法操作！");
           return;
         }
         const zone = get3x3Cells(floor, colIdx);
@@ -1167,10 +1174,10 @@
         return;
       }
 
-      // 2. 館長佈置館藏階段
+      // 2. 館長佈置館藏階段 (嚴格限制只有館長本人能點選！)
       if (st === "CURATOR_SETUP") {
         if (!canControlRole("curator")) {
-          showToast("⚠️ 等待館長佈置博物館館藏...");
+          showToast("⚠️ 目前是館長佈置館藏階段，怪盜陣營無法操作棋盤！");
           return;
         }
         if (curatorSetupStep === "ARTIFACTS") {
@@ -1179,7 +1186,7 @@
             tempSelectedCells.splice(idx, 1);
           } else {
             if (tempSelectedCells.length >= 5) {
-              showToast("⚠️ 5 個真品館藏已選滿！可點擊已選格子取消，或按下一步。");
+              showToast("⚠️ 5 個真品館藏已選滿！可點擊已選格子取消，或按確認按鈕。");
               return;
             }
             tempSelectedCells.push(key);
@@ -1214,7 +1221,7 @@
       if (st === "THIEF_TURN") {
         const activeRole = getActiveTurnRole();
         if (!canControlRole(activeRole)) {
-          showToast(`⚠️ 目前輪到 ${ROLE_LABELS[activeRole]} 行動！`);
+          showToast(`⚠️ 目前輪到 ${ROLE_LABELS[activeRole]} 行動，請等待對方選格！`);
           return;
         }
         if (g.markedCells.includes(key)) {
@@ -1227,7 +1234,6 @@
         if (!isQuickHands) {
           tempSelectedCells = [key];
         } else {
-          // 眼疾手快：可選同欄上下相鄰的 2 格
           const idx = tempSelectedCells.indexOf(key);
           if (idx >= 0) {
             tempSelectedCells.splice(idx, 1);
@@ -1238,7 +1244,6 @@
             if (first.col === colIdx && Math.abs(first.floor - floor) === 1) {
               tempSelectedCells.push(key);
             } else {
-              // 若點選非上下相鄰格，直接改以新格子為第一格
               tempSelectedCells = [key];
               showToast("💡 眼疾手快：請再點選與此格「上下樓層相鄰（同欄）」的第 2 格！");
             }
@@ -1257,13 +1262,10 @@
           return;
         }
         if (curatorActionType === "EXHIBIT") {
-          // 點擊任意層樓自動設為連選 3 層的基準
           tempExhibitBaseFloor = Math.max(1, Math.min(8, floor - 1));
         } else {
-          // 捉賊模式
           const isUpgraded = roomState.config.skillsEnabled && g.curatorSkill === 2;
           if (!isUpgraded) {
-            // 一般捉賊：同樓層相鄰 3 格
             const startCol = Math.max(0, Math.min(4, colIdx - 1));
             tempArrestCells = [
               cellKey(floor, startCol),
@@ -1271,13 +1273,11 @@
               cellKey(floor, startCol + 2)
             ];
           } else {
-            // 加強巡邏：可選兩次，每次同樓層相鄰 2 格
             const startCol = Math.max(0, Math.min(5, colIdx));
             const pair = [cellKey(floor, startCol), cellKey(floor, startCol + 1)];
             if (tempArrestCells.length === 0 || tempArrestCells.length >= 4) {
               tempArrestCells = [...pair];
             } else {
-              // 加入第二組 (避免完全重疊)
               const combined = Array.from(new Set([...tempArrestCells, ...pair]));
               tempArrestCells = combined.slice(0, 4);
             }
@@ -1287,14 +1287,14 @@
       }
     };
 
-    // 提交魔術表演 3x3 區域
     window.confirmMagicZone = async function () {
+      const magicRole = getActiveTurnRole();
+      if (!canControlRole(magicRole)) return;
       if (tempSelectedCells.length !== 9) {
         showToast("⚠️ 請先在棋盤上點擊選擇 3×3 魔術格位置！");
         return;
       }
       const g = JSON.parse(JSON.stringify(roomState.game));
-      const magicRole = getActiveTurnRole();
       g.magicZone = {
         ownerRole: magicRole,
         centerFloor: window._tempMagicCenter.centerFloor,
@@ -1309,8 +1309,8 @@
       });
     };
 
-    // 館長佈置步驟切換與確認
     window.nextCuratorSetupStep = async function () {
+      if (!canControlRole("curator")) return;
       const g = JSON.parse(JSON.stringify(roomState.game));
       const cfg = roomState.config;
 
@@ -1346,7 +1346,6 @@
         }
       }
 
-      // 完成所有館長佈置，檢查是否觸發「魔術表演」開局前自動盜取
       g.artifacts = [...tempSelectedCells];
       g.counterfeitCell = tempCounterfeitCell;
       g.trapCells = [...tempTrapCells];
@@ -1374,7 +1373,6 @@
         }
       }
 
-      // 設定第一位可行動怪盜
       g.currentThiefIdx = 0;
       advanceToNextValidThiefOrCurator(g, cfg);
       resetLocalSelections();
@@ -1385,9 +1383,7 @@
       });
     };
 
-    // 推進怪盜順序，若該怪盜已落網或本回合被罰停則自動跳過
     function advanceToNextValidThiefOrCurator(g, cfg) {
-      // 檢查真品館藏是否已全部被偷光
       const remainingReal = g.artifacts.filter(k => !g.stolenCells.includes(k));
       if (remainingReal.length === 0) {
         g.winner = "THIEVES";
@@ -1417,7 +1413,6 @@
         return;
       }
 
-      // 3 名怪盜皆行動完畢，進入館長回合
       g._nextPhase = "CURATOR_TURN";
     }
 
@@ -1427,12 +1422,13 @@
       return copy;
     }
 
-    // 怪盜確認盜取行動 (含：得手後立即撤離博物館、本回合不會被抓到！)
     window.confirmThiefSteal = async function () {
       if (!roomState || roomState.status !== "THIEF_TURN") return;
+      const activeRole = getActiveTurnRole();
+      if (!canControlRole(activeRole)) return;
+
       const g = JSON.parse(JSON.stringify(roomState.game));
       const cfg = roomState.config;
-      const activeRole = getActiveTurnRole();
       const tObj = g.thieves[activeRole];
 
       if (tempSelectedCells.length === 0) {
@@ -1440,7 +1436,6 @@
         return;
       }
 
-      // NO.5 眼疾手快於第一回合嘗試盜取時展示預告函
       if (cfg.skillsEnabled && tObj.skill === 5 && g.round === 1 && !tObj.revealed) {
         tObj.revealed = true;
         g.logs.unshift(`🃏 【預告函公開】${ROLE_LABELS[activeRole]} 亮出預告函「NO.5 眼疾手快」！可同時盜取上下相鄰兩格！`);
@@ -1453,7 +1448,6 @@
         const { floor } = parseKey(cell);
         const label = formatCellLabel(cell);
 
-        // 1. 檢查是否踩中館長「私刑」陷阱
         if (cfg.skillsEnabled && g.trapCells.includes(cell) && !g.triggeredTraps.includes(cell)) {
           g.triggeredTraps.push(cell);
           tObj.score = Math.floor(tObj.score / 2);
@@ -1461,21 +1455,16 @@
           g.logs.unshift(`🪤 【觸發私刑陷阱】${ROLE_LABELS[activeRole]} 潛入 ${label} 踩中陷阱！怪盜分數減半，館長獲得 +10 分！`);
         }
 
-        // 2. 檢查是否偷到真品館藏
         if (g.artifacts.includes(cell) && !g.stolenCells.includes(cell)) {
           g.stolenCells.push(cell);
           let pts = cfg.stealScore;
           if (cfg.skillsEnabled && tObj.skill === 4) {
-            // NO.4 恐高大盜：5F以下x2，6F以上/2
             pts = (floor <= 5) ? pts * 2 : Math.floor(pts / 2);
           }
           tObj.score += pts;
-          // 關鍵規則修正：盜取成功後，該回合算成功離開博物館，不會被館長捉到！
           tObj.escapedThisTurn = true;
-          g.logs.unshift(`💥 【館藏失竊＆得手撤離】警報響起！位於 ${label} 的真品館藏被 ${ROLE_LABELS[activeRole]} 成功盜走！怪盜已攜帶寶物撤離博物館，本回合不會被館長捉到！`);
-        }
-        // 3. 檢查是否偷到贗品館藏 (策略1)
-        else if (cfg.skillsEnabled && g.counterfeitCell === cell && !g.stolenCells.includes(cell)) {
+          g.logs.unshift(`💥 【館藏失竊＆得手撤離】警報響起！位於 ${label} 的真品館藏被 ${ROLE_LABELS[activeRole]} 成功盜走！怪盜已攜帶寶物撤離博物館，本回合免疫捉賊！`);
+        } else if (cfg.skillsEnabled && g.counterfeitCell === cell && !g.stolenCells.includes(cell)) {
           g.stolenCells.push(cell);
           g.logs.unshift(`🎭 【盜中贗品】位於 ${label} 的館藏被盜走，但那是館長佈置的「贗品」！怪盜獲得 0 分！`);
         }
@@ -1491,9 +1480,8 @@
       });
     };
 
-    // 館長使用策略 3「施工」
     window.useCuratorConstruction = async function () {
-      if (!roomState || roomState.status !== "CURATOR_TURN") return;
+      if (!roomState || roomState.status !== "CURATOR_TURN" || !canControlRole("curator")) return;
       const g = JSON.parse(JSON.stringify(roomState.game));
       if (!roomState.config.skillsEnabled || g.curatorSkill !== 3 || g.constructionUsed) return;
 
@@ -1503,16 +1491,14 @@
       await updateDoc(getRoomDocRef(currentRoomCode), { game: g });
     };
 
-    // 館長確認展出或捉賊並進行回合結算
     window.confirmCuratorAction = async function () {
-      if (!roomState || roomState.status !== "CURATOR_TURN") return;
+      if (!roomState || roomState.status !== "CURATOR_TURN" || !canControlRole("curator")) return;
       const g = JSON.parse(JSON.stringify(roomState.game));
       const cfg = roomState.config;
 
       g.lastExhibitFloors = [];
       g.lastArrestCells = [];
 
-      // 取得本回合所有怪盜选择的樓層分佈 (供 NO.3 聯合大盜計算)
       const floorToThieves = {};
       for (const rKey of ["thief1", "thief2", "thief3"]) {
         const sel = g.thieves[rKey].selectedCellsThisTurn || [];
@@ -1523,7 +1509,6 @@
         });
       }
 
-      // 計算 NO.3 聯合大盜同層加分
       if (cfg.skillsEnabled) {
         for (const rKey of ["thief1", "thief2", "thief3"]) {
           const tObj = g.thieves[rKey];
@@ -1545,7 +1530,6 @@
       }
 
       if (curatorActionType === "EXHIBIT") {
-        // 計算展出樓層 (3個連續樓層，若策略4紀念品商店則必含1F)
         const floors = new Set([tempExhibitBaseFloor, tempExhibitBaseFloor + 1, tempExhibitBaseFloor + 2]);
         if (cfg.skillsEnabled && g.curatorSkill === 4) {
           floors.add(1);
@@ -1553,7 +1537,6 @@
         const exhibitFloors = Array.from(floors).sort((a, b) => a - b);
         g.lastExhibitFloors = exhibitFloors;
 
-        // 統計展出樓層內未失竊的館藏 (包含真品與未失竊的贗品)
         const allValidArtifacts = [...g.artifacts];
         if (cfg.skillsEnabled && g.counterfeitCell) allValidArtifacts.push(g.counterfeitCell);
         const activeExhibits = allValidArtifacts.filter(cell => {
@@ -1564,7 +1547,6 @@
 
         let gained = activeExhibits.length * cfg.exhibitScore;
 
-        // 策略5：主題展覽 (同一樓層有相鄰未失竊館藏參與計分時，展出總分 x2)
         let themeDoubled = false;
         if (cfg.skillsEnabled && g.curatorSkill === 5 && activeExhibits.length >= 2) {
           for (let i = 0; i < activeExhibits.length; i++) {
@@ -1582,7 +1564,6 @@
         g.curatorScore += gained;
         g.logs.unshift(`🏛️ 【館長展出】標記 ${exhibitFloors.map(f => f + "F").join("、")} 展出！共有 ${activeExhibits.length} 件館藏參展${themeDoubled ? "（觸發主題展覽×2）" : ""}，館長獲得 +${gained} 分！`);
 
-        // 檢查預告函 NO.1「聚焦於我」：若該回合盜取在展出樓層中，獲得相同展出分數
         if (cfg.skillsEnabled && gained > 0) {
           for (const rKey of ["thief1", "thief2", "thief3"]) {
             const tObj = g.thieves[rKey];
@@ -1595,7 +1576,6 @@
           }
         }
       } else {
-        // 館長選擇「捉賊」
         if (tempArrestCells.length === 0) {
           showToast("⚠️ 請先在棋盤上點擊選擇要捉賊的格子！");
           return;
@@ -1604,7 +1584,6 @@
         const arrestLabels = tempArrestCells.map(formatCellLabel).join("、");
         const perCatchPts = (cfg.skillsEnabled && g.curatorSkill === 2) ? cfg.arrestUpgradedScore : cfg.arrestScore;
 
-        // 找出被捉賊格命中的怪盜
         const caughtSet = new Set();
         const escapedSkippedSet = new Set();
 
@@ -1613,13 +1592,11 @@
           const hit = (tObj.selectedCellsThisTurn || []).some(c => tempArrestCells.includes(c));
           if (!hit) continue;
 
-          // 規則修正：本回合已盜取成功離開博物館的怪盜，不會被抓到！
           if (tObj.escapedThisTurn) {
             escapedSkippedSet.add(rKey);
             continue;
           }
 
-          // 預告函 NO.6「1995」：免疫捉賊並獲得 +n 分
           if (cfg.skillsEnabled && tObj.skill === 6) {
             tObj.score += cfg.card1995Score;
             if (!tObj.revealed) {
@@ -1639,14 +1616,12 @@
           g.logs.unshift(`🏃 【得手撤離免疫】館長巡邏了 ${arrestLabels}，但 ${names} 本回合已盜得館藏並撤離博物館，不會被捕捉！`);
         }
 
-        // 檢查 NO.3「聯合大盜」同樓層連坐機制 (僅連坐尚未撤離且非 1995 的同層怪盜)
         if (cfg.skillsEnabled && caughtSet.size > 0) {
           const caughtFloors = new Set();
           caughtSet.forEach(rKey => {
             g.thieves[rKey].selectedCellsThisTurn.forEach(c => caughtFloors.add(parseKey(c).floor));
           });
 
-          // 檢查該樓層是否有任何怪盜持有 NO.3 聯合大盜，或是被捉者與同層怪盜觸發連坐
           caughtFloors.forEach(fl => {
             const thievesOnFl = floorToThieves[fl] ? Array.from(floorToThieves[fl]) : [];
             const hasJointThiefOnFl = thievesOnFl.some(r => g.thieves[r].skill === 3);
@@ -1685,7 +1660,6 @@
         }
       }
 
-      // 回合結束：所有怪盜本回合選過的格子留下全場可見標記
       for (const rKey of ["thief1", "thief2", "thief3"]) {
         const tObj = g.thieves[rKey];
         (tObj.selectedCellsThisTurn || []).forEach(c => {
@@ -1695,7 +1669,6 @@
         tObj.escapedThisTurn = false;
       }
 
-      // 檢查遊戲結束條件
       const remainingReal = g.artifacts.filter(k => !g.stolenCells.includes(k));
       const allEliminated = ["thief1", "thief2", "thief3"].every(r => g.thieves[r].eliminated);
 
@@ -1724,7 +1697,6 @@
       });
     };
 
-    // 重新開始新一局 (回到大廳保留座位)
     window.backToLobby = async function () {
       if (!isMeHost() || !roomState) return;
       await updateDoc(getRoomDocRef(currentRoomCode), {
@@ -1734,20 +1706,18 @@
     };
 
     // =========================================================================
-    // 10. 智慧 AI 人機自動行動引擎 (由房主瀏覽器負責驅動)
+    // 10. 智慧 AI 人機自動行動引擎 (由房主驅動)
     // =========================================================================
     function scheduleAIIfNeeded() {
       clearTimeout(aiTimer);
       if (!isMeHost() || !roomState || !roomState.game) return;
       const st = roomState.status;
-      const g = roomState.game;
 
-      // CARD_DRAW 階段：若全部人類都已翻牌且只剩等待，不強制自動跳，讓房主按鈕確認
       if (st === "MAGIC_SETUP" || st === "CURATOR_SETUP" || st === "THIEF_TURN" || st === "CURATOR_TURN") {
         const activeRole = getActiveTurnRole();
         const seat = roomState.seats[activeRole];
         if (seat && seat.isAI) {
-          aiTimer = setTimeout(() => executeAIMove(activeRole), 950);
+          aiTimer = setTimeout(() => executeAIMove(activeRole), 900);
         }
       }
     }
@@ -1755,21 +1725,27 @@
     async function executeAIMove(roleKey) {
       if (!isMeHost() || !roomState || !roomState.game) return;
       const st = roomState.status;
-      const g = roomState.game;
+      const g = JSON.parse(JSON.stringify(roomState.game));
       const cfg = roomState.config;
 
-      // 1. AI 怪盜佈置 3x3 魔術格
       if (st === "MAGIC_SETUP") {
-        const cf = Math.floor(Math.random() * 8) + 2; // 2~9
-        const cc = Math.floor(Math.random() * 5) + 1; // 1~5
+        const cf = Math.floor(Math.random() * 8) + 2;
+        const cc = Math.floor(Math.random() * 5) + 1;
         const zone = get3x3Cells(cf, cc);
-        tempSelectedCells = zone.cells;
-        window._tempMagicCenter = { centerFloor: zone.centerFloor, centerCol: zone.centerCol };
-        await window.confirmMagicZone();
+        g.magicZone = {
+          ownerRole: roleKey,
+          centerFloor: zone.centerFloor,
+          centerCol: zone.centerCol,
+          cells: zone.cells
+        };
+        g.logs.unshift(`🎩 AI 怪盜已秘密佈置完成 3×3 魔術格！現在請館長佈置館藏。`);
+        await updateDoc(getRoomDocRef(currentRoomCode), {
+          status: "CURATOR_SETUP",
+          game: g
+        });
         return;
       }
 
-      // 2. AI 館長佈置館藏
       if (st === "CURATOR_SETUP") {
         const allCells = [];
         for (let f = 1; f <= 10; f++) {
@@ -1778,11 +1754,9 @@
         const shuffled = shuffleArray(allCells);
         const picked = [];
 
-        // 若有策略4紀念品商店，確保 1F 至少放 1 個
         if (cfg.skillsEnabled && g.curatorSkill === 4) {
           picked.push(cellKey(1, Math.floor(Math.random() * 7)));
         }
-        // 若有策略5主題展覽，放一組相鄰館藏
         if (cfg.skillsEnabled && g.curatorSkill === 5) {
           const rf = Math.floor(Math.random() * 8) + 2;
           const rc = Math.floor(Math.random() * 5);
@@ -1792,21 +1766,47 @@
           if (picked.length >= 5) break;
           if (!picked.includes(c)) picked.push(c);
         }
-        tempSelectedCells = picked.slice(0, 5);
+        g.artifacts = picked.slice(0, 5);
 
-        const remain = shuffled.filter(c => !tempSelectedCells.includes(c));
+        const remain = shuffled.filter(c => !g.artifacts.includes(c));
         if (cfg.skillsEnabled && g.curatorSkill === 1) {
-          tempCounterfeitCell = remain[0];
+          g.counterfeitCell = remain[0];
         }
         if (cfg.skillsEnabled && g.curatorSkill === 6) {
-          tempTrapCells = [remain[1], remain[2]];
+          g.trapCells = [remain[1], remain[2]];
         }
-        curatorSetupStep = "FINAL";
-        await window.nextCuratorSetupStep();
+        g.logs.unshift(`🏛️ AI 館長已完成博物館佈置！第 1 回合正式開始！`);
+
+        if (cfg.skillsEnabled && g.magicZone && g.magicZone.cells) {
+          const mRole = g.magicZone.ownerRole;
+          const mThief = g.thieves[mRole];
+          const hitReal = g.artifacts.filter(cell => g.magicZone.cells.includes(cell));
+          const hitFake = (g.counterfeitCell && g.magicZone.cells.includes(g.counterfeitCell)) ? [g.counterfeitCell] : [];
+          if (hitReal.length > 0 || hitFake.length > 0) {
+            mThief.revealed = true;
+            hitReal.forEach(cell => {
+              if (!g.stolenCells.includes(cell)) g.stolenCells.push(cell);
+              if (!g.markedCells.includes(cell)) g.markedCells.push(cell);
+              mThief.score += cfg.stealScore;
+            });
+            hitFake.forEach(cell => {
+              if (!g.stolenCells.includes(cell)) g.stolenCells.push(cell);
+              if (!g.markedCells.includes(cell)) g.markedCells.push(cell);
+            });
+            const allHits = [...hitReal, ...hitFake].map(formatCellLabel).join("、");
+            g.logs.unshift(`✨ 【預告函公開：NO.2 魔術表演】${ROLE_LABELS[mRole]} 的 3×3 魔術格在開局前盜走了位於 ${allHits} 的館藏！`);
+          }
+        }
+
+        g.currentThiefIdx = 0;
+        advanceToNextValidThiefOrCurator(g, cfg);
+        await updateDoc(getRoomDocRef(currentRoomCode), {
+          status: g.winner ? "GAME_OVER" : (g._nextPhase || "THIEF_TURN"),
+          game: cleanTempFlags(g)
+        });
         return;
       }
 
-      // 3. AI 怪盜回合選格
       if (st === "THIEF_TURN") {
         const tObj = g.thieves[roleKey];
         const available = [];
@@ -1820,14 +1820,11 @@
         }
         if (available.length === 0) return;
 
-        // 根據預告函偏好選格
         let candidates = [...available];
         if (cfg.skillsEnabled && tObj.skill === 4) {
-          // 恐高大盜優先偷 1~5F
           const low = candidates.filter(k => parseKey(k).floor <= 5);
           if (low.length > 0) candidates = low;
         } else if (cfg.skillsEnabled && tObj.skill === 3) {
-          // 聯合大盜優先找本回合其他怪盜選過的樓層
           const teammateFloors = [];
           ["thief1", "thief2", "thief3"].forEach(r => {
             if (r !== roleKey) {
@@ -1841,31 +1838,33 @@
         }
 
         const firstPick = candidates[Math.floor(Math.random() * candidates.length)];
-        tempSelectedCells = [firstPick];
+        const aiPick = [firstPick];
 
-        // 眼疾手快：再選上下相鄰一格
         if (cfg.skillsEnabled && tObj.skill === 5) {
           const { floor, col } = parseKey(firstPick);
           const up = cellKey(floor + 1, col);
           const down = cellKey(floor - 1, col);
-          if (floor < 10 && !g.markedCells.includes(up)) {
-            tempSelectedCells.push(up);
-          } else if (floor > 1 && !g.markedCells.includes(down)) {
-            tempSelectedCells.push(down);
-          }
+          if (floor < 10 && !g.markedCells.includes(up)) aiPick.push(up);
+          else if (floor > 1 && !g.markedCells.includes(down)) aiPick.push(down);
         }
+
+        // 暫時切換授權執行 AI 盜取
+        tempSelectedCells = aiPick;
+        const prevMode = perspectiveMode;
+        perspectiveMode = roleKey;
         await window.confirmThiefSteal();
+        perspectiveMode = prevMode;
         return;
       }
 
-      // 4. AI 館長回合決策
       if (st === "CURATOR_TURN") {
-        // 若有施工且標記超過 15 個，自動開施工
+        const prevMode = perspectiveMode;
+        perspectiveMode = "curator";
+
         if (cfg.skillsEnabled && g.curatorSkill === 3 && !g.constructionUsed && g.markedCells.length >= 15) {
           await window.useCuratorConstruction();
         }
 
-        // 55% 機率展出得分最高的 3 層樓，45% 機率捉賊
         if (Math.random() < 0.55) {
           curatorActionType = "EXHIBIT";
           let bestBase = 1;
@@ -1895,11 +1894,12 @@
           }
         }
         await window.confirmCuratorAction();
+        perspectiveMode = prevMode;
       }
     }
 
     // =========================================================================
-    // 11. 畫面渲染引擎 (Lobby / Card Draw / Game Board)
+    // 11. 畫面渲染引擎
     // =========================================================================
     function renderAll() {
       if (!roomState) return;
@@ -1910,12 +1910,12 @@
       document.getElementById("screenCardDraw").classList.toggle("hidden", st !== "CARD_DRAW");
       document.getElementById("screenGame").classList.toggle("hidden", st === "LOBBY" || st === "CARD_DRAW");
 
-      // 若在遊戲中，顯示測試視角切換器
+      // 關鍵修正：只有「1真人+3AI」單人測試模式下才顯示視角切換器！多人模式強制隱藏！
       const viewBar = document.getElementById("viewSwitcherBar");
-      if (st !== "LOBBY" && st !== "CARD_DRAW") {
+      if (st !== "LOBBY" && st !== "CARD_DRAW" && isSinglePlayerTestMode()) {
         viewBar.classList.remove("hidden");
         viewBar.classList.add("flex");
-        ["AUTO", "curator", "thief1", "thief2", "thief3"].forEach(k => {
+        ["MY_ROLE", "AUTO", "curator", "thief1", "thief2", "thief3"].forEach(k => {
           const btn = document.getElementById(`viewBtn_${k}`);
           if (btn) {
             btn.className = (perspectiveMode === k)
@@ -1925,6 +1925,7 @@
         });
       } else {
         viewBar.classList.add("hidden");
+        viewBar.classList.remove("flex");
       }
 
       if (st === "LOBBY") renderLobby();
@@ -1938,11 +1939,10 @@
       document.getElementById("lobbyHostName").textContent = roomState.hostName;
       const myRole = getMyAssignedRole();
       document.getElementById("lobbyMyIdentity").textContent =
-        `${getMyNickname()} (${host ? "👑房主" : "一般玩家"} / ${myRole ? ROLE_LABELS[myRole] : "尚未選位"})`;
+        `${getMyNickname()} (${host ? "👑房主" : "玩家"} / ${myRole ? ROLE_LABELS[myRole] : "尚未選位"})`;
 
       document.getElementById("btnFillAI").classList.toggle("hidden", !host);
 
-      // 渲染 4 個陣營座位
       const seatBox = document.getElementById("seatListContainer");
       seatBox.innerHTML = ["curator", "thief1", "thief2", "thief3"].map(roleKey => {
         const s = roomState.seats[roleKey] || {};
@@ -1967,7 +1967,6 @@
         `;
       }).join("");
 
-      // 同步右側設定表單
       const cfg = roomState.config;
       const fields = [
         ["cfg_skillsEnabled", String(cfg.skillsEnabled)],
@@ -2007,23 +2006,24 @@
       const startHint = document.getElementById("lobbyStartHint");
       startBtn.disabled = !host || !allSeated;
       if (!allSeated) {
-        startHint.innerHTML = `⏳ 尚有空位未滿。房主可點擊右上角 <strong class="text-[#ff48a0]">「🤖 一鍵用 AI 補滿空位」</strong> 立即開局！`;
+        startHint.innerHTML = `⏳ 尚有空位未滿。房主可點擊每個空位旁的 <strong class="text-[#ff48a0]">「🤖 指派 AI」</strong> 或右上角 <strong class="text-[#ff48a0]">「🤖 一鍵用 AI 補滿空位」</strong>！`;
       } else {
         startHint.innerHTML = `✅ 4 個陣營位置已全數就緒！${host ? "請房主點擊下方按鈕開始對局。" : "等待房主開始遊戲..."}`;
       }
     }
 
-    // 渲染開局互動式抽卡階段
     function renderCardDraw() {
       const g = roomState.game;
       const grid = document.getElementById("cardDrawGrid");
-      const myRole = getMyAssignedRole();
+      const singleTest = isSinglePlayerTestMode();
 
       grid.innerHTML = ["curator", "thief1", "thief2", "thief3"].map(roleKey => {
         const seat = roomState.seats[roleKey];
         const drawn = g.cardDrawn[roleKey];
-        const canFlip = (seat.uid === myUid) || isMeHost();
-        const canSeeDetail = (roleKey === "curator") || (seat.uid === myUid) || isMeHost();
+        const isMySeat = (seat.uid === myUid);
+        const canFlip = isMySeat || singleTest;
+        // 館長策略全員可見；怪盜預告函技能內容「僅該怪盜本人（或單人測試房主）」可見！
+        const canSeeDetail = (roleKey === "curator") || isMySeat || singleTest;
 
         if (!drawn) {
           return `
@@ -2039,13 +2039,12 @@
               </div>
               ${canFlip
                 ? `<button onclick="window.flipMyCard('${roleKey}')" class="p5-btn w-full py-2.5 text-sm">✨ 點擊抽取並翻開卡牌</button>`
-                : `<div class="text-center text-xs text-white/60 py-2">等待玩家抽取...</div>`
+                : `<div class="text-center text-xs text-white/60 py-2">等待 ${seat.name} 翻牌...</div>`
               }
             </div>
           `;
         }
 
-        // 已翻開狀態
         if (roleKey === "curator") {
           const sk = CURATOR_SKILLS[g.curatorSkill];
           return `
@@ -2072,7 +2071,7 @@
               <div>
                 <div class="flex items-center justify-between mb-1">
                   <span class="text-xs font-black text-[#ff48a0]">${ROLE_LABELS[roleKey]}</span>
-                  <span class="text-[10px] bg-black border border-[#ff48a0] text-[#ff48a0] font-black px-1.5 py-0.5">順序 #${sk.order}</span>
+                  <span class="text-[10px] bg-black border border-[#ff48a0] text-[#ff48a0] font-black px-1.5 py-0.5">編號 NO.${sk.order}</span>
                 </div>
                 <div class="text-xs text-white/70 mb-3">${seat.name}</div>
                 <div class="bg-black border-2 border-white p-3 mb-2">
@@ -2082,7 +2081,7 @@
                     <p class="text-xs text-white/85 leading-relaxed">${sk.desc}</p>
                   ` : `
                     <div class="text-base font-black text-white mb-1">🂠 預告函編號：NO.${sk.order}</div>
-                    <p class="text-xs text-white/60 leading-relaxed">（戰爭迷霧：預告函技能內容僅該名怪盜可見，依技能條件觸發時公開）</p>
+                    <p class="text-xs text-white/60 leading-relaxed">（戰爭迷霧保護中：技能內容僅該名怪盜本人可見，依技能條件觸發時公開）</p>
                   `}
                 </div>
               </div>
@@ -2104,7 +2103,6 @@
       btn.textContent = allDrawn ? "⚡ 全員抽卡完畢，進入博物館佈置階段" : "⏳ 請等待所有玩家點擊翻開卡牌...";
     }
 
-    // 渲染主遊戲畫面
     function renderGame() {
       const g = roomState.game;
       const cfg = roomState.config;
@@ -2113,7 +2111,6 @@
       const isCuratorView = (viewRole === "curator");
       const isThiefView = viewRole && viewRole.startsWith("thief");
 
-      // 頂部 HUD
       document.getElementById("hudRound").textContent = `${g.round} / ${cfg.maxRounds}`;
       const remainReal = g.artifacts.filter(k => !g.stolenCells.includes(k)).length;
       document.getElementById("hudRemainingTreasures").textContent = `${remainReal} / ${g.artifacts.length || 5}`;
@@ -2121,15 +2118,13 @@
       document.getElementById("hudModeBadge").textContent = cfg.skillsEnabled ? "⚡ 技能卡模式" : "🛡️ 純基礎規則模式";
       document.getElementById("hudCurrentViewRole").textContent = `目前視角：${ROLE_LABELS[viewRole]}`;
 
-      // 棋盤副標題提示
       const sub = document.getElementById("boardSubtitle");
       if (isCuratorView) {
-        sub.textContent = "館長視野：可看見所有館藏(💎)、贗品(🎭)、陷阱(🪤)與怪盜標記(🐾)，但看不見魔術格與怪盜暗中選格。";
+        sub.textContent = "館長專屬視野：可看見所有館藏(💎)、贗品(🎭)、陷阱(🪤)與怪盜標記(🐾)，看不見魔術格與怪盜暗中選格。";
       } else {
-        sub.textContent = "怪盜視野：可看見 3×3 魔術格(🎩)、隊友本回合選格與歷史標記(🐾)，但看不見未失竊的館藏與陷阱。";
+        sub.textContent = "怪盜專屬視野：可看見 3×3 魔術格(🎩)、隊友本回合選格與歷史標記(🐾)，看不見未失竊的館藏與陷阱。";
       }
 
-      // 計算目前館長展出預覽樓層
       let previewExhibitFloors = [];
       if (st === "CURATOR_TURN" && curatorActionType === "EXHIBIT" && isCuratorView) {
         const fls = new Set([tempExhibitBaseFloor, tempExhibitBaseFloor + 1, tempExhibitBaseFloor + 2]);
@@ -2137,7 +2132,6 @@
         previewExhibitFloors = Array.from(fls);
       }
 
-      // 渲染 10F ~ 1F 7x10 博物館棋盤
       const gridEl = document.getElementById("museumGrid");
       let rowsHtml = "";
       for (let floor = 10; floor >= 1; floor--) {
@@ -2169,7 +2163,6 @@
           const isTempArrest = (st === "CURATOR_TURN" && curatorActionType === "ARREST" && isCuratorView && tempArrestCells.includes(key));
           const isLastArrest = (g.lastArrestCells || []).includes(key);
 
-          // 檢查本回合是否有怪盜已經選了這格 (僅怪盜視角或遊戲結束可見)
           const thievesPickedHere = [];
           if (isThiefView || st === "GAME_OVER") {
             ["thief1", "thief2", "thief3"].forEach((rKey, idx) => {
@@ -2179,7 +2172,6 @@
             });
           }
 
-          // 決定格子背景與圖標
           let bgClass = "bg-[#12000b] border-white/30 text-white";
           let badges = [];
 
@@ -2199,8 +2191,7 @@
             }
           }
 
-          // 佈置階段預覽
-          if (st === "CURATOR_SETUP" && isCuratorView) {
+          if (st === "CURATOR_SETUP" && isCuratorView && canControlRole("curator")) {
             if (isTempSel) {
               bgClass = "bg-emerald-700 border-white text-white";
               badges.push("💎預置");
@@ -2213,22 +2204,19 @@
             }
           }
 
-          // 魔術格顯示 (僅怪盜視野或結算可見)
           if ((isThiefView || st === "GAME_OVER") && isMagicCell) {
             badges.push("🎩魔術");
           }
-          if (st === "MAGIC_SETUP" && isTempSel) {
+          if (st === "MAGIC_SETUP" && isThiefView && isTempSel) {
             bgClass = "bg-purple-800 border-white text-white";
             badges.push("🎩3×3");
           }
 
-          // 怪盜歷史標記 (全員可見)
           if (isMarked) {
             badges.push("🐾標記");
           }
 
-          // 本回合怪盜選格預覽
-          if (st === "THIEF_TURN" && isTempSel) {
+          if (st === "THIEF_TURN" && isTempSel && canControlRole(getActiveTurnRole())) {
             bgClass = "bg-[#ff48a0] border-white text-black font-black";
             badges.push("🎯鎖定");
           }
@@ -2236,7 +2224,6 @@
             badges.push(`🏃${thievesPickedHere.join(",")}`);
           }
 
-          // 館長捉賊預覽與上回合捉賊格
           if (isTempArrest) {
             bgClass = "bg-red-600 border-white text-white font-black";
             badges.push("🚨捉賊");
@@ -2275,7 +2262,7 @@
         const magicRole = getActiveTurnRole();
         phaseTag.textContent = "開局前準備";
         titleEl.textContent = `🎩 ${ROLE_LABELS[magicRole]} 佈置 3×3 魔術格`;
-        descEl.textContent = "請在左側博物館棋盤點擊任意一格作為 3×3 魔術格中心（僅怪盜可見）。若館長稍後佈置的館藏落在此 3×3 區域內，第一回合開始前就會自動被你盜取！";
+        descEl.textContent = "持有「魔術表演」的怪盜請在棋盤點擊任意一格作為 3×3 魔術格中心（僅怪盜可見）。若館長稍後佈置的館藏落在此區域內，開局前就會自動被盜取！";
         if (canControlRole(magicRole)) {
           ctrlEl.innerHTML = `
             <button onclick="window.confirmMagicZone()" class="p5-btn w-full py-2.5 text-sm">
@@ -2283,32 +2270,33 @@
             </button>
           `;
         } else {
-          ctrlEl.innerHTML = `<div class="text-xs text-[#ff48a0] font-bold">⏳ 等待持有「魔術表演」的怪盜完成佈置...</div>`;
+          ctrlEl.innerHTML = `<div class="text-xs text-[#ff48a0] font-bold">⏳ 等待 ${ROLE_LABELS[magicRole]} 完成佈置...</div>`;
         }
         return;
       }
 
       if (st === "CURATOR_SETUP") {
         phaseTag.textContent = "博物館佈置階段";
-        if (curatorSetupStep === "ARTIFACTS") {
-          titleEl.textContent = `🏛️ 請館長佈置 5 個真品館藏 (${tempSelectedCells.length}/5)`;
-          descEl.textContent = "點擊左側棋盤格放置 5 個館藏。若有「主題展覽」建議同層相鄰擺放；若有「紀念品商店」別忘了在 1F 放置館藏！";
-        } else if (curatorSetupStep === "COUNTERFEIT") {
-          titleEl.textContent = `🎭 策略1「贗品」：請選擇第 6 個贗品館藏位置 (${tempCounterfeitCell ? 1 : 0}/1)`;
-          descEl.textContent = "贗品可正常參與展出加分，但怪盜偷到贗品時獲得 0 分！";
-        } else if (curatorSetupStep === "TRAPS") {
-          titleEl.textContent = `🪤 策略6「私刑」：請佈置 2 個陷阱標記 (${tempTrapCells.length}/2)`;
-          descEl.textContent = "怪盜盜取選中陷阱格時將失去一半分數，且館長獲得 +10 分！";
-        }
-
         if (canControlRole("curator")) {
+          if (curatorSetupStep === "ARTIFACTS") {
+            titleEl.textContent = `🏛️ 請館長佈置 5 個真品館藏 (${tempSelectedCells.length}/5)`;
+            descEl.textContent = "請點擊左側棋盤放置 5 個館藏（怪盜看不到你的選擇）。";
+          } else if (curatorSetupStep === "COUNTERFEIT") {
+            titleEl.textContent = `🎭 策略1「贗品」：請選擇第 6 個贗品位置 (${tempCounterfeitCell ? 1 : 0}/1)`;
+            descEl.textContent = "贗品可正常參與展出加分，但怪盜偷到贗品時獲得 0 分！";
+          } else if (curatorSetupStep === "TRAPS") {
+            titleEl.textContent = `🪤 策略6「私刑」：請佈置 2 個陷阱標記 (${tempTrapCells.length}/2)`;
+            descEl.textContent = "怪盜盜取選中陷阱格時將失去一半分數，且館長獲得 +10 分！";
+          }
           ctrlEl.innerHTML = `
             <button onclick="window.nextCuratorSetupStep()" class="p5-btn w-full py-2.5 text-sm">
               ✅ 確認佈置並進入下一步
             </button>
           `;
         } else {
-          ctrlEl.innerHTML = `<div class="text-xs text-[#ff48a0] font-bold">⏳ 館長正在秘密佈置博物館館藏...</div>`;
+          titleEl.textContent = "🏛️ 館長正在秘密佈置博物館館藏";
+          descEl.textContent = "戰爭迷霧保護中：怪盜陣營在此階段無法查看或操作棋盤，請稍候館長完成佈置！";
+          ctrlEl.innerHTML = `<div class="text-xs text-[#ff48a0] font-bold">⏳ 等待館長 (${roomState.seats.curator.name}) 完成館藏佈置...</div>`;
         }
         return;
       }
@@ -2340,7 +2328,7 @@
       if (st === "CURATOR_TURN") {
         phaseTag.textContent = `第 ${g.round} 回合・館長決策與結算`;
         titleEl.textContent = "🏛️ 輪到館長選擇「展出」或「捉賊」";
-        descEl.textContent = "怪盜已完成本回合潛入（本回合已得手館藏的怪盜已撤離博物館，不會被捉到）。請選擇要標記 3 個連續樓層「展出」賺分，或選擇同樓層相鄰格子「捉賊」！";
+        descEl.textContent = "怪盜已完成本回合潛入（本回合已得手館藏的怪盜已撤離博物館，免疫捉賊）。請館長選擇標記 3 個連續樓層「展出」賺分，或選擇同樓層相鄰格子「捉賊」！";
 
         if (canControlRole("curator")) {
           const isUpgraded = cfg.skillsEnabled && g.curatorSkill === 2;
@@ -2421,7 +2409,6 @@
       renderAll();
     };
 
-    // 渲染館長與怪盜狀態卡 (包含技能迷霧與得手撤離標記)
     function renderStatusCards() {
       const g = roomState.game;
       const cfg = roomState.config;
@@ -2430,7 +2417,6 @@
       const isGameOver = roomState.status === "GAME_OVER";
       const box = document.getElementById("statusCardsContainer");
 
-      // 1. 館長卡片 (館長策略與館長分數對所有人公開)
       const cSeat = roomState.seats.curator;
       const cSkillObj = cfg.skillsEnabled && g.curatorSkill ? CURATOR_SKILLS[g.curatorSkill] : null;
       let html = `
@@ -2448,13 +2434,11 @@
         </div>
       `;
 
-      // 2. 三名怪盜卡片 (依照本局行動順序排列)
       g.thiefOrder.forEach((rKey, orderIdx) => {
         const seat = roomState.seats[rKey];
         const tObj = g.thieves[rKey];
         const sk = (cfg.skillsEnabled && tObj.skill) ? THIEF_SKILLS[tObj.skill] : null;
 
-        // 怪盜分數僅怪盜陣營或終局可見；預告函僅自己、已公開(revealed)或終局可見
         const canSeeScore = isThiefView || isGameOver;
         const canSeeSkill = (viewRole === rKey) || tObj.revealed || isGameOver;
 
@@ -2519,7 +2503,6 @@
       ).join("");
     }
 
-    // 啟動初始化
     initFirebaseConnection();
   </script>
 </body>
